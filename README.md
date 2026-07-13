@@ -1,5 +1,7 @@
 # How to Run the Social Media Data Visualizer
 
+For a deeper look at how the system is put together (components, data flow, and scaling plans), see [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## 1. Prerequisites
 
 Make sure Docker is installed on your machine before doing anything else.
