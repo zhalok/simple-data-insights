@@ -4,12 +4,12 @@
   "metadata": {
     "name": "takapay-sentiment",
     "namespace": "default",
-    "uid": "7422eb0a-b1e0-4a15-8694-6bcd5c84b9f9",
-    "resourceVersion": "1783949431350986",
-    "generation": 6,
-    "creationTimestamp": "2026-07-13T12:49:26Z",
+    "uid": "f22bb987-d273-4845-9ba3-7a34163599f5",
+    "resourceVersion": "1783951202941981",
+    "generation": 11,
+    "creationTimestamp": "2026-07-13T13:36:55Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "490781419503616"
+      "grafana.app/deprecatedInternalID": "502730968539136"
     },
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
@@ -18,11 +18,11 @@
       "grafana.app/managerAllowsEdits": "true",
       "grafana.app/managerId": "default",
       "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/sourceChecksum": "f10a9b308af49bf85a469ea70babb1dd",
+      "grafana.app/sourceChecksum": "4c8ce0098386418db93850e1f6e27745",
       "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
-      "grafana.app/sourceTimestamp": "1783946534000",
-      "grafana.app/updatedBy": "user:cfrzj23ngh534d",
-      "grafana.app/updatedTimestamp": "2026-07-13T13:30:31Z"
+      "grafana.app/sourceTimestamp": "1783950053000",
+      "grafana.app/updatedBy": "user:afrznail28kjkc",
+      "grafana.app/updatedTimestamp": "2026-07-13T14:00:02Z"
     }
   },
   "spec": {
@@ -132,6 +132,232 @@
                       "tooltip": false,
                       "viz": false
                     }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "id": 10,
+          "title": "Topic Score Analysis (Positive)",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P44368ADAD746BC27"
+                      },
+                      "spec": {
+                        "dataset": "postgres",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\n  topic,\n  sentiment,\n  SUM(sentiment_score) AS total_score\nFROM takapay_posts\nWHERE $__timeFilter(timestamp)\n  AND sentiment = 'positive'\nGROUP BY topic, sentiment\nORDER BY total_score DESC, topic, sentiment;\n",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "partitionByValues",
+                  "spec": {
+                    "options": {
+                      "fields": [
+                        "sentiment"
+                      ],
+                      "keepFields": false
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "table",
+            "version": "13.1.0",
+            "spec": {
+              "options": {
+                "cellHeight": "sm",
+                "frameIndex": 0,
+                "showHeader": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "gauge"
+                    },
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "id": 11,
+          "title": "Topic Score Analysis (Negative)",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P44368ADAD746BC27"
+                      },
+                      "spec": {
+                        "dataset": "postgres",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\n  topic,\n  sentiment,\n  SUM(100 - sentiment_score) AS total_score\nFROM takapay_posts\nWHERE $__timeFilter(timestamp)\n  AND sentiment = 'negative'\nGROUP BY topic, sentiment\nORDER BY total_score DESC, topic, sentiment;\n",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "partitionByValues",
+                  "spec": {
+                    "options": {
+                      "fields": [
+                        "sentiment"
+                      ],
+                      "keepFields": false
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "table",
+            "version": "13.1.0",
+            "spec": {
+              "options": {
+                "cellHeight": "sm",
+                "frameIndex": 1,
+                "showHeader": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "gauge"
+                    },
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
                   }
                 },
                 "overrides": []
@@ -1090,11 +1316,24 @@
             "spec": {
               "x": 0,
               "y": 28,
-              "width": 24,
+              "width": 12,
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-8"
+                "name": "panel-10"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 12,
+              "y": 28,
+              "width": 12,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-11"
               }
             }
           },
@@ -1107,7 +1346,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-7"
+                "name": "panel-8"
               }
             }
           },
@@ -1120,7 +1359,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-9"
+                "name": "panel-7"
               }
             }
           },
@@ -1129,6 +1368,19 @@
             "spec": {
               "x": 0,
               "y": 55,
+              "width": 24,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-9"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 64,
               "width": 24,
               "height": 11,
               "element": {
