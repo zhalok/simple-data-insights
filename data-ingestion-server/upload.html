@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Data Ingestion Upload</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 560px;
+    margin: 64px auto;
+    padding: 0 24px;
+    color: #1a1a1a;
+  }
+  h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  p.sub { color: #666; margin-top: 0; margin-bottom: 32px; }
+
+  #dropzone {
+    border: 2px dashed #bbb;
+    border-radius: 10px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  #dropzone.dragover {
+    border-color: #4a7dfc;
+    background: rgba(74, 125, 252, 0.06);
+  }
+  #dropzone p { margin: 0; color: #666; }
+  #dropzone p.filetypes { font-size: 0.8rem; margin-top: 8px; color: #999; }
+  #file-input { display: none; }
+
+  #file-info {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  button#upload-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background: #4a7dfc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  button#upload-btn:disabled { background: #a9bdf5; cursor: not-allowed; }
+
+  #status {
+    margin-top: 20px;
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: none;
+    white-space: pre-wrap;
+  }
+  #status.success { background: #e6f6ec; color: #1e7e42; display: block; }
+  #status.error { background: #fdecea; color: #b3261e; display: block; }
+  #status.loading { background: #eef2fe; color: #34479e; display: block; }
+
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e6e6; }
+    p.sub { color: #999; }
+    #dropzone { border-color: #444; }
+    #dropzone p { color: #aaa; }
+    #dropzone p.filetypes { color: #777; }
+    #status.success { background: #10381f; color: #6fd996; }
+    #status.error { background: #3a1414; color: #f28b82; }
+    #status.loading { background: #16234a; color: #a9bdf5; }
+  }
+</style>
+</head>
+<body>
+  <h1>Social Media Data Upload</h1>
+  <p class="sub">Upload a CSV or JSON file to ingest into the database.</p>
+
+  <div id="dropzone">
+    <p><strong>Click to choose a file</strong> or drag and drop it here</p>
+    <p class="filetypes">.csv or .json</p>
+    <input id="file-input" type="file" accept=".csv,.json" />
+  </div>
+
+  <div id="file-info"></div>
+
+  <button id="upload-btn" disabled>Upload</button>
+
+  <div id="status"></div>
+
+<script>
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('file-input');
+  const fileInfo = document.getElementById('file-info');
+  const uploadBtn = document.getElementById('upload-btn');
+  const status = document.getElementById('status');
+  const UPLOAD_URL = '/upload';
+
+  let selectedFile = null;
+
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      setFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) setFile(fileInput.files[0]);
+  });
+
+  function setFile(file) {
+    const name = file.name.toLowerCase();
+    if (!name.endsWith('.csv') && !name.endsWith('.json')) {
+      showStatus('error', 'File must have a .csv or .json extension');
+      selectedFile = null;
+      uploadBtn.disabled = true;
+      fileInfo.style.display = 'none';
+      return;
+    }
+    selectedFile = file;
+    fileInfo.style.display = 'block';
+    fileInfo.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+    uploadBtn.disabled = false;
+    hideStatus();
+  }
+
+  uploadBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+
+    uploadBtn.disabled = true;
+    showStatus('loading', 'Uploading and ingesting...');
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const res = await fetch(UPLOAD_URL, { method: 'POST', body: formData });
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        const detail = data && data.detail ? data.detail : `HTTP ${res.status}`;
+        throw new Error(detail);
+      }
+
+      showStatus(
+        'success',
+        `Done: ${data.rows_processed} rows processed from ${data.filename} (${data.file_type})`
+      );
+    } catch (err) {
+      showStatus('error', `Upload failed: ${err.message}`);
+    } finally {
+      uploadBtn.disabled = false;
+    }
+  });
+
+  function showStatus(kind, message) {
+    status.className = kind;
+    status.textContent = message;
+    status.style.display = 'block';
+  }
+  function hideStatus() {
+    status.style.display = 'none';
+    status.className = '';
+  }
+</script>
+</body>
+</html>

@@ -6,7 +6,10 @@ from contextlib import contextmanager
 import ijson
 import psycopg2
 from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from psycopg2.extras import execute_values
+
+UPLOAD_PAGE_PATH = os.path.join(os.path.dirname(__file__), "upload.html")
 
 DB_CONFIG = {
     "host": os.environ.get("POSTGRES_HOST", "localhost"),
@@ -130,6 +133,11 @@ def ingest_json(path: str) -> int:
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/")
+def upload_page():
+    return FileResponse(UPLOAD_PAGE_PATH)
 
 
 @app.post("/upload")
