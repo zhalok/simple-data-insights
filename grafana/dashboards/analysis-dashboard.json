@@ -5,8 +5,8 @@
     "name": "takapay-sentiment",
     "namespace": "default",
     "uid": "8e357a6a-ecb9-49f8-aaa2-c31efc1bce65",
-    "resourceVersion": "1783934509634015",
-    "generation": 9,
+    "resourceVersion": "1783935353945991",
+    "generation": 11,
     "creationTimestamp": "2026-07-13T08:56:42Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "432210132140032"
@@ -18,11 +18,11 @@
       "grafana.app/managerAllowsEdits": "true",
       "grafana.app/managerId": "default",
       "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/sourceChecksum": "5d38c284acb9a6ba7ffdc57f5af3d256",
+      "grafana.app/sourceChecksum": "92b072de54afc4717b261e9bf2b9d67f",
       "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
-      "grafana.app/sourceTimestamp": "1783932940000",
+      "grafana.app/sourceTimestamp": "1783934524000",
       "grafana.app/updatedBy": "user:dfrymhcud0268d",
-      "grafana.app/updatedTimestamp": "2026-07-13T09:21:49Z"
+      "grafana.app/updatedTimestamp": "2026-07-13T09:35:53Z"
     }
   },
   "spec": {
@@ -609,6 +609,116 @@
             }
           }
         }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "id": 6,
+          "title": "Average Comment Analysis",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "postgres",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "Postgres"
+                      },
+                      "spec": {
+                        "dataset": "postgres",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT sentiment, ROUND(AVG(comments)) AS count\nFROM takapay_posts\nGROUP BY sentiment\nORDER BY count DESC",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "piechart",
+            "version": "13.1.0",
+            "spec": {
+              "options": {
+                "displayLabels": [
+                  "name",
+                  "percent"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "overflow": "ellipsis",
+                  "placement": "right",
+                  "showLegend": true,
+                  "values": [
+                    "value",
+                    "percent"
+                  ]
+                },
+                "pieType": "pie",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "/count/",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic",
+                    "fixedColor": "#73BF69"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
       }
     },
     "layout": {
@@ -650,7 +760,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-3"
+                "name": "panel-4"
               }
             }
           },
@@ -663,7 +773,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-4"
+                "name": "panel-6"
               }
             }
           },
@@ -672,6 +782,19 @@
             "spec": {
               "x": 0,
               "y": 19,
+              "width": 24,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 28,
               "width": 24,
               "height": 11,
               "element": {
