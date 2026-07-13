@@ -4,12 +4,12 @@
   "metadata": {
     "name": "takapay-sentiment",
     "namespace": "default",
-    "uid": "8e357a6a-ecb9-49f8-aaa2-c31efc1bce65",
-    "resourceVersion": "1783935353945991",
-    "generation": 11,
-    "creationTimestamp": "2026-07-13T08:56:42Z",
+    "uid": "7422eb0a-b1e0-4a15-8694-6bcd5c84b9f9",
+    "resourceVersion": "1783948991670008",
+    "generation": 3,
+    "creationTimestamp": "2026-07-13T12:49:26Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "432210132140032"
+      "grafana.app/deprecatedInternalID": "490781419503616"
     },
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
@@ -18,11 +18,11 @@
       "grafana.app/managerAllowsEdits": "true",
       "grafana.app/managerId": "default",
       "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/sourceChecksum": "92b072de54afc4717b261e9bf2b9d67f",
+      "grafana.app/sourceChecksum": "f10a9b308af49bf85a469ea70babb1dd",
       "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
-      "grafana.app/sourceTimestamp": "1783934524000",
-      "grafana.app/updatedBy": "user:dfrymhcud0268d",
-      "grafana.app/updatedTimestamp": "2026-07-13T09:35:53Z"
+      "grafana.app/sourceTimestamp": "1783946534000",
+      "grafana.app/updatedBy": "user:cfrzj23ngh534d",
+      "grafana.app/updatedTimestamp": "2026-07-13T13:23:11Z"
     }
   },
   "spec": {
@@ -671,9 +671,15 @@
             "version": "13.1.0",
             "spec": {
               "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
                   "calcs": [],
                   "displayMode": "list",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
                   "placement": "bottom",
                   "showLegend": true
                 },
@@ -685,6 +691,19 @@
               },
               "fieldConfig": {
                 "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
                   "color": {
                     "mode": "palette-classic"
                   },
@@ -695,6 +714,7 @@
                     "axisLabel": "",
                     "axisPlacement": "auto",
                     "barAlignment": 0,
+                    "barWidthFactor": 0.6,
                     "drawStyle": "line",
                     "fillOpacity": 15,
                     "gradientMode": "none",
@@ -711,6 +731,7 @@
                       "type": "linear"
                     },
                     "showPoints": "auto",
+                    "showValues": false,
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
@@ -719,19 +740,6 @@
                     "thresholdsStyle": {
                       "mode": "off"
                     }
-                  },
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
                   }
                 },
                 "overrides": []
@@ -740,11 +748,11 @@
           }
         }
       },
-      "panel-6": {
+      "panel-8": {
         "kind": "Panel",
         "spec": {
-          "id": 6,
-          "title": "Average Comment Analysis",
+          "id": 8,
+          "title": "Daily Sentiment Analysis",
           "description": "",
           "links": [],
           "data": {
@@ -756,17 +764,17 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "postgres",
+                      "group": "grafana-postgresql-datasource",
                       "version": "v0",
                       "datasource": {
-                        "name": "Postgres"
+                        "name": "P44368ADAD746BC27"
                       },
                       "spec": {
                         "dataset": "postgres",
                         "editorMode": "code",
-                        "format": "table",
+                        "format": "time_series",
                         "rawQuery": true,
-                        "rawSql": "SELECT sentiment, ROUND(AVG(comments)) AS count\nFROM takapay_posts\nGROUP BY sentiment\nORDER BY count DESC",
+                        "rawSql": "SELECT\n  time_bucket('1 day', timestamp) AS time,\n  sentiment,\n  COUNT(*) AS count\nFROM takapay_posts\nWHERE $__timeFilter(timestamp)\nGROUP BY time, sentiment\nORDER BY time\n",
                         "sql": {
                           "columns": [
                             {
@@ -797,33 +805,22 @@
           },
           "vizConfig": {
             "kind": "VizConfig",
-            "group": "piechart",
+            "group": "timeseries",
             "version": "13.1.0",
             "spec": {
               "options": {
-                "displayLabels": [
-                  "name",
-                  "percent"
-                ],
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
                 "legend": {
-                  "displayMode": "table",
+                  "calcs": [],
+                  "displayMode": "list",
+                  "enableFacetedFilter": false,
                   "overflow": "ellipsis",
-                  "placement": "right",
-                  "showLegend": true,
-                  "values": [
-                    "value",
-                    "percent"
-                  ]
+                  "placement": "bottom",
+                  "showLegend": true
                 },
-                "pieType": "pie",
-                "reduceOptions": {
-                  "calcs": [
-                    "sum"
-                  ],
-                  "fields": "/count/",
-                  "values": true
-                },
-                "sort": "desc",
                 "tooltip": {
                   "hideZeros": false,
                   "mode": "single",
@@ -832,15 +829,54 @@
               },
               "fieldConfig": {
                 "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
                   "color": {
-                    "mode": "palette-classic",
-                    "fixedColor": "#73BF69"
+                    "mode": "palette-classic"
                   },
                   "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 15,
+                    "gradientMode": "none",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
                       "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 2,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
                     }
                   }
                 },
@@ -886,24 +922,11 @@
             "spec": {
               "x": 0,
               "y": 10,
-              "width": 12,
+              "width": 24,
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-4"
-              }
-            }
-          },
-          {
-            "kind": "GridLayoutItem",
-            "spec": {
-              "x": 12,
-              "y": 10,
-              "width": 12,
-              "height": 9,
-              "element": {
-                "kind": "ElementReference",
-                "name": "panel-6"
+                "name": "panel-8"
               }
             }
           },
@@ -916,7 +939,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-3"
+                "name": "panel-4"
               }
             }
           },
@@ -926,10 +949,10 @@
               "x": 0,
               "y": 28,
               "width": 24,
-              "height": 11,
+              "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-5"
+                "name": "panel-3"
               }
             }
           },
@@ -937,12 +960,25 @@
             "kind": "GridLayoutItem",
             "spec": {
               "x": 0,
-              "y": 39,
+              "y": 37,
               "width": 24,
               "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-7"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 46,
+              "width": 24,
+              "height": 11,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-5"
               }
             }
           }
