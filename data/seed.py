@@ -41,9 +41,9 @@ def load_json(file_path):
 
 CREATE_TABLE_SQL = """
     CREATE TABLE IF NOT EXISTS takapay_posts (
-        id BIGINT PRIMARY KEY,
+        id BIGINT,
         platform VARCHAR(50),
-        timestamp TIMESTAMP,
+        timestamp TIMESTAMP NOT NULL,
         author VARCHAR(255),
         text TEXT,
         language VARCHAR(20),
@@ -52,7 +52,8 @@ CREATE_TABLE_SQL = """
         sentiment_score INTEGER,
         topic VARCHAR(100),
         reactions INTEGER,
-        comments INTEGER
+        comments INTEGER,
+        PRIMARY KEY (id, timestamp)
     )
 """
 
@@ -66,7 +67,7 @@ def insert_rows(rows):
                 query = f"""
                     INSERT INTO takapay_posts ({", ".join(COLUMNS)})
                     VALUES ({", ".join(["%s"] * len(COLUMNS))})
-                    ON CONFLICT (id) DO NOTHING
+                    ON CONFLICT (id, timestamp) DO NOTHING
                 """
                 values = [tuple(row.get(col) or None for col in COLUMNS) for row in rows]
                 cur.executemany(query, values)
