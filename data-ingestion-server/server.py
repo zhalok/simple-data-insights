@@ -54,7 +54,7 @@ CREATE_TABLE_SQL = """
 INSERT_SQL = f"""
     INSERT INTO takapay_posts ({", ".join(COLUMNS)})
     VALUES %s
-    ON CONFLICT (id) DO NOTHING
+    ON CONFLICT (id, timestamp) DO NOTHING
 """
 
 UPLOAD_CHUNK_BYTES = 1024 * 1024  # 1 MB, bounds memory while streaming the upload to disk
