@@ -10,6 +10,20 @@ services:
       - ./init-db:/docker-entrypoint-initdb.d
       - ./postgres-data:/var/lib/postgresql/data
 
+  data-ingestion-server:
+    build: ./data-ingestion-server
+    container_name: data-ingestion-server
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
