@@ -1,5 +1,7 @@
 # How to Run the Social Media Data Visualizer
 
+🎥 **[Watch the demo](https://www.loom.com/share/955d17e3480045909a610f69d96476d4)**
+
 For a deeper look at how the system is put together (components, data flow, and scaling plans), see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 1. Prerequisites
