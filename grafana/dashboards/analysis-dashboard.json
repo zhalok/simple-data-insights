@@ -5,8 +5,8 @@
     "name": "takapay-sentiment",
     "namespace": "default",
     "uid": "f22bb987-d273-4845-9ba3-7a34163599f5",
-    "resourceVersion": "1783951202941981",
-    "generation": 11,
+    "resourceVersion": "1783952093293015",
+    "generation": 16,
     "creationTimestamp": "2026-07-13T13:36:55Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "502730968539136"
@@ -18,11 +18,11 @@
       "grafana.app/managerAllowsEdits": "true",
       "grafana.app/managerId": "default",
       "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/sourceChecksum": "4c8ce0098386418db93850e1f6e27745",
+      "grafana.app/sourceChecksum": "76375b9d85c2b1372dd3d1a3b83c0328",
       "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
-      "grafana.app/sourceTimestamp": "1783950053000",
+      "grafana.app/sourceTimestamp": "1783951563000",
       "grafana.app/updatedBy": "user:afrznail28kjkc",
-      "grafana.app/updatedTimestamp": "2026-07-13T14:00:02Z"
+      "grafana.app/updatedTimestamp": "2026-07-13T14:14:53Z"
     }
   },
   "spec": {
@@ -931,7 +931,8 @@
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "continuous-GrYlRd",
+                    "seriesBy": "last"
                   },
                   "custom": {
                     "axisBorderShow": false,
@@ -941,9 +942,9 @@
                     "axisPlacement": "auto",
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
-                    "drawStyle": "line",
-                    "fillOpacity": 15,
-                    "gradientMode": "none",
+                    "drawStyle": "bars",
+                    "fillOpacity": 70,
+                    "gradientMode": "scheme",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -951,7 +952,10 @@
                     },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
-                    "lineWidth": 2,
+                    "lineStyle": {
+                      "fill": "solid"
+                    },
+                    "lineWidth": 1,
                     "pointSize": 5,
                     "scaleDistribution": {
                       "type": "linear"
@@ -1080,8 +1084,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 15,
-                    "gradientMode": "none",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -1106,7 +1110,56 @@
                     }
                   }
                 },
-                "overrides": []
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "scope": "series",
+                      "options": "count negative"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "scope": "series",
+                      "options": "count positive"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "green",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "scope": "series",
+                      "options": "count neutral"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
