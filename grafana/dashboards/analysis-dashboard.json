@@ -4,12 +4,12 @@
   "metadata": {
     "name": "takapay-sentiment",
     "namespace": "default",
-    "uid": "71b731f1-8f20-4ce1-8e33-3eed3b70facb",
-    "resourceVersion": "1783932612284982",
+    "uid": "8e357a6a-ecb9-49f8-aaa2-c31efc1bce65",
+    "resourceVersion": "1783933696052992",
     "generation": 6,
-    "creationTimestamp": "2026-07-13T06:50:54Z",
+    "creationTimestamp": "2026-07-13T08:56:42Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "400550117433344"
+      "grafana.app/deprecatedInternalID": "432210132140032"
     },
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
@@ -18,11 +18,11 @@
       "grafana.app/managerAllowsEdits": "true",
       "grafana.app/managerId": "default",
       "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/sourceChecksum": "eec332fc82caccf382e2cb26d9e0eea8",
-      "grafana.app/sourcePath": "/var/lib/grafana/dashboards/sentiment.json",
-      "grafana.app/sourceTimestamp": "1783925677000",
+      "grafana.app/sourceChecksum": "5d38c284acb9a6ba7ffdc57f5af3d256",
+      "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
+      "grafana.app/sourceTimestamp": "1783932940000",
       "grafana.app/updatedBy": "user:dfrymhcud0268d",
-      "grafana.app/updatedTimestamp": "2026-07-13T08:50:12Z"
+      "grafana.app/updatedTimestamp": "2026-07-13T09:08:16Z"
     }
   },
   "spec": {
@@ -248,6 +248,264 @@
             }
           }
         }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "id": 3,
+          "title": "Topic Analysis",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "postgres",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "Postgres"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT topic, COUNT(*) AS count FROM takapay_posts GROUP BY topic ORDER BY count DESC",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "barchart",
+            "version": "13.1.0",
+            "spec": {
+              "options": {
+                "barRadius": 0.2,
+                "barWidth": 0.85,
+                "fullHighlight": false,
+                "groupWidth": 0.8,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "orientation": "horizontal",
+                "showValue": "always",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xField": "time",
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "continuous-viridis"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 100,
+                    "gradientMode": "hue",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 7,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "id": 4,
+          "title": "Sentiment score analysis",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P44368ADAD746BC27"
+                      },
+                      "spec": {
+                        "dataset": "postgres",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\n  CASE\n    WHEN sentiment_score >= 0  AND sentiment_score < 25  THEN '0-25'\n    WHEN sentiment_score >= 25 AND sentiment_score < 50  THEN '25-50'\n    WHEN sentiment_score >= 50 AND sentiment_score < 75  THEN '50-75'\n    WHEN sentiment_score >= 75 AND sentiment_score <= 100 THEN '75-100'\n  END AS score_range,\n  COUNT(*) AS count\nFROM takapay_posts\nGROUP BY score_range\nORDER BY score_range;\n",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "barchart",
+            "version": "13.1.0",
+            "spec": {
+              "options": {
+                "barRadius": 0,
+                "barWidth": 0.97,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 80,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 1,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
       }
     },
     "layout": {
@@ -277,6 +535,32 @@
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-2"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 10,
+              "width": 12,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 12,
+              "y": 10,
+              "width": 12,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-4"
               }
             }
           }
