@@ -19,3 +19,10 @@ dist/
 
 # OS files
 .DS_Store
+
+# Grafana runtime data
+grafana-data/
+
+# Postgres runtime data
+postgres-data/
+
