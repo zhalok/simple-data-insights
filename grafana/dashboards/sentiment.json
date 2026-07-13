@@ -1,0 +1,46 @@
+{
+  "title": "TakaPay Social Media Sentiment",
+  "uid": "takapay-sentiment",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "panels": [
+    {
+      "id": 1,
+      "title": "Sentiment Distribution",
+      "type": "piechart",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "Postgres" },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "Postgres" },
+          "format": "table",
+          "rawSql": "SELECT sentiment, COUNT(*) AS count FROM takapay_posts GROUP BY sentiment ORDER BY count DESC",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": ["value", "percent"]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": ["sum"],
+          "fields": "/count/",
+          "values": true
+        },
+        "tooltip": { "mode": "single" }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      }
+    }
+  ]
+}
