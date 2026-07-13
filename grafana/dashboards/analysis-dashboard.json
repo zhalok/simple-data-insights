@@ -5,8 +5,8 @@
     "name": "takapay-sentiment",
     "namespace": "default",
     "uid": "7422eb0a-b1e0-4a15-8694-6bcd5c84b9f9",
-    "resourceVersion": "1783948991670008",
-    "generation": 3,
+    "resourceVersion": "1783949431350986",
+    "generation": 6,
     "creationTimestamp": "2026-07-13T12:49:26Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "490781419503616"
@@ -22,7 +22,7 @@
       "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
       "grafana.app/sourceTimestamp": "1783946534000",
       "grafana.app/updatedBy": "user:cfrzj23ngh534d",
-      "grafana.app/updatedTimestamp": "2026-07-13T13:23:11Z"
+      "grafana.app/updatedTimestamp": "2026-07-13T13:30:31Z"
     }
   },
   "spec": {
@@ -885,6 +885,148 @@
             }
           }
         }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "id": 9,
+          "title": "Daily Topic Analysis",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "P44368ADAD746BC27"
+                      },
+                      "spec": {
+                        "dataset": "postgres",
+                        "editorMode": "code",
+                        "format": "time_series",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\n  time_bucket('1 day', timestamp) AS time,\n  topic,\n  COUNT(*) AS count\nFROM takapay_posts\nWHERE $__timeFilter(timestamp)\nGROUP BY time, topic\nORDER BY time\n",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.1.0",
+            "spec": {
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "enableFacetedFilter": false,
+                  "overflow": "ellipsis",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic",
+                    "seriesBy": "last"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 70,
+                    "gradientMode": "hue",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineStyle": {
+                      "fill": "solid"
+                    },
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
       }
     },
     "layout": {
@@ -926,7 +1068,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-8"
+                "name": "panel-4"
               }
             }
           },
@@ -939,7 +1081,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-4"
+                "name": "panel-3"
               }
             }
           },
@@ -952,7 +1094,7 @@
               "height": 9,
               "element": {
                 "kind": "ElementReference",
-                "name": "panel-3"
+                "name": "panel-8"
               }
             }
           },
@@ -974,6 +1116,19 @@
             "spec": {
               "x": 0,
               "y": 46,
+              "width": 24,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-9"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 55,
               "width": 24,
               "height": 11,
               "element": {
