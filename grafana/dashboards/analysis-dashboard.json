@@ -4,12 +4,12 @@
   "metadata": {
     "name": "takapay-sentiment",
     "namespace": "default",
-    "uid": "f22bb987-d273-4845-9ba3-7a34163599f5",
-    "resourceVersion": "1783952093293015",
-    "generation": 16,
-    "creationTimestamp": "2026-07-13T13:36:55Z",
+    "uid": "bae61820-f5b1-4c76-a336-c4ba0e39a989",
+    "resourceVersion": "1783953345859989",
+    "generation": 3,
+    "creationTimestamp": "2026-07-13T14:33:54Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "502730968539136"
+      "grafana.app/deprecatedInternalID": "517071132553216"
     },
     "annotations": {
       "grafana.app/createdBy": "access-policy:service",
@@ -18,11 +18,11 @@
       "grafana.app/managerAllowsEdits": "true",
       "grafana.app/managerId": "default",
       "grafana.app/saved-from-ui": "Grafana v13.1.0 (b309c9bb3b)",
-      "grafana.app/sourceChecksum": "76375b9d85c2b1372dd3d1a3b83c0328",
+      "grafana.app/sourceChecksum": "486ae04e630f8d09c6ed641ab4695a2b",
       "grafana.app/sourcePath": "/var/lib/grafana/dashboards/analysis-dashboard.json",
-      "grafana.app/sourceTimestamp": "1783951563000",
-      "grafana.app/updatedBy": "user:afrznail28kjkc",
-      "grafana.app/updatedTimestamp": "2026-07-13T14:14:53Z"
+      "grafana.app/sourceTimestamp": "1783952267000",
+      "grafana.app/updatedBy": "user:bfrzsdcd7r8qof",
+      "grafana.app/updatedTimestamp": "2026-07-13T14:35:45Z"
     }
   },
   "spec": {
@@ -257,7 +257,7 @@
         "kind": "Panel",
         "spec": {
           "id": 11,
-          "title": "Topic Score Analysis (Negative)",
+          "title": "Topic Score Analysis (Negative) (100-actual score)",
           "description": "",
           "links": [],
           "data": {
@@ -313,7 +313,10 @@
                       "fields": [
                         "sentiment"
                       ],
-                      "keepFields": false
+                      "keepFields": false,
+                      "naming": {
+                        "asLabels": true
+                      }
                     }
                   }
                 }
@@ -329,7 +332,13 @@
               "options": {
                 "cellHeight": "sm",
                 "frameIndex": 1,
-                "showHeader": true
+                "showHeader": true,
+                "sortBy": [
+                  {
+                    "desc": true,
+                    "displayName": "total_score negative"
+                  }
+                ]
               },
               "fieldConfig": {
                 "defaults": {
